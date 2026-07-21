@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { createTestIndexer } from "generated";
+import { createTestIndexer } from "envio";
 
 describe("Uniswap V4 Indexer", () => {
   it("Create Ticks even if we don't know about the pool", async () => {

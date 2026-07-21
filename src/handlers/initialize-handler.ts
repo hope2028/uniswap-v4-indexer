@@ -2,13 +2,15 @@
  * Initialize event handlers for Uniswap v4 pools
  */
 
-import { PoolManager, BigDecimal } from "generated";
+import { indexer, PoolManager, BigDecimal } from "envio";
 import { getChainConfig } from "../utils/chains";
 import { sqrtPriceX96ToTokenPrices } from "../utils/pricing";
 import { getTokenMetadata } from "../utils/tokenMetadata";
 import { findNativePerToken } from "../utils/pricing";
 
-PoolManager.Initialize.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "PoolManager", event: "Initialize" },
+  async ({ event, context }) => {
   // Get chain config for whitelist tokens and pools to skip
   const chainConfig = getChainConfig(event.chainId);
 
@@ -256,4 +258,5 @@ PoolManager.Initialize.handler(async ({ event, context }) => {
   context.PoolManager.set(poolManager);
   context.Token.set(token0);
   context.Token.set(token1);
-});
+}
+);
