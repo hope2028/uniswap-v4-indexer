@@ -1,7 +1,7 @@
 /*
  * Swap event handlers for Uniswap v4 pools
  */
-import { PoolManager, BigDecimal, type Swap } from "generated";
+import { indexer, PoolManager, BigDecimal, type Swap } from "envio";
 import { getChainConfig } from "../utils/chains";
 import { convertTokenToDecimal } from "../utils";
 import { getTrackedAmountUSD, getNativePriceInUSD } from "../utils/pricing";
@@ -9,7 +9,9 @@ import { safeDiv } from "../utils/index";
 import { findNativePerToken } from "../utils/pricing";
 import { sqrtPriceX96ToTokenPrices } from "../utils/pricing";
 
-PoolManager.Swap.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "PoolManager", event: "Swap" },
+  async ({ event, context }) => {
   let [poolManager, pool, bundle] = await Promise.all([
     context.PoolManager.get(`${event.chainId}_${event.srcAddress}`),
     context.Pool.get(`${event.chainId}_${event.params.id}`),
@@ -278,4 +280,5 @@ PoolManager.Swap.handler(async ({ event, context }) => {
         .plus(pool.totalValueLockedUSD), // Add new TVL
     });
   }
-});
+}
+);

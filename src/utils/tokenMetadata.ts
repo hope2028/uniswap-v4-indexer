@@ -2,7 +2,7 @@ import { createPublicClient, http, getContract, type PublicClient } from "viem";
 import { ADDRESS_ZERO } from "./constants";
 import { getChainConfig } from "./chains";
 import { createEffect, S, type Address } from "envio";
-import type { EvmChainId } from "generated";
+import type { EvmChainId } from "envio";
 
 const ERC20_ABI = [
   {

@@ -1,11 +1,7 @@
 /*
  * Liquidity event handlers for Uniswap v4 pools
  */
-import {
-  type handlerContext,
-  type PoolManager_ModifyLiquidity_event,
-  PoolManager,
-} from "generated";
+import { indexer, type EvmOnEventContext, type PoolManager_ModifyLiquidity_event, PoolManager } from "envio";
 import {
   getAmount0,
   getAmount1,
@@ -15,7 +11,7 @@ import { createInitialTick } from "../utils/tick";
 import { getChainConfig } from "../utils/chains";
 
 const updateTicks = async (
-  context: handlerContext,
+  context: EvmOnEventContext,
   event: PoolManager_ModifyLiquidity_event,
   poolId: string
 ) => {
@@ -73,7 +69,9 @@ const updateTicks = async (
   context.Tick.set(upperTick);
 };
 
-PoolManager.ModifyLiquidity.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "PoolManager", event: "ModifyLiquidity" },
+  async ({ event, context }) => {
   // Get chain config for pools to skip
   const chainConfig = getChainConfig(event.chainId);
 
@@ -236,4 +234,5 @@ PoolManager.ModifyLiquidity.handler(async ({ event, context }) => {
   context.Pool.set(pool);
   context.Token.set(token0);
   context.Token.set(token1);
-});
+}
+);
